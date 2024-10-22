@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  backend:
+    build: ./simple-api-student
+    container_name: SpringAPIapp
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
+    networks:
+      - app-network
+    depends_on:
+      - database
+
+  database:
+    build: ./tp-app
+    container_name: mytpapp
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+
+  httpd:
+    build: ./http-app
+    container_name: httpApp
+    ports:
+      - 80:80
+    networks:
+      - app-network
+    depends_on:
+      - backend
+
+networks:
+  app-network:
+
+volumes:
+  db_data:
